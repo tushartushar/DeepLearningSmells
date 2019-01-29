@@ -26,7 +26,7 @@ Tokenizer takes a method or class definition and generates integer tokens for ea
 token in the source code.
 The output of Tokenizer is ready to feed to neural networks.
 
-![Overview of the study](figs\overview.png)
+![Overview of the study](figs/overview.png)
 
 # What this repository contains
 ## Code
