@@ -19,6 +19,8 @@ def _run_code_split(folder_name, folder_path, code_split_result_folder, code_spl
 
 
 def cs_code_split(repo_base_folder, code_split_result_folder, code_split_mode, code_split_exe_path):
+    if not os.path.exists(code_split_result_folder):
+        os.makedirs(code_split_result_folder)
     for dir in os.listdir(repo_base_folder):
         print("Processing " + dir)
         if os.path.exists(os.path.join(code_split_result_folder, dir)):

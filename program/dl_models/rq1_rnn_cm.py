@@ -6,7 +6,7 @@ import inputs
 DIM = "1d"
 
 # TOKENIZER_OUT_PATH = "../../data/tokenizer_out_cs/"
-TOKENIZER_OUT_PATH = "/users/pa18/tushar/smellDetectionML/data/tokenizer_out_cs/"
+TOKENIZER_OUT_PATH = "/users/pa18/tushar/smellDetectionML/data/tokenizer_out/"
 # ---
 
 smell = "ComplexMethod"

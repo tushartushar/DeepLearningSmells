@@ -1,8 +1,10 @@
+from inspect import signature
+
 import matplotlib.pyplot as plt
 import datetime
 import os
 import configuration as cfg
-from sklearn.utils.fixes import signature
+# from sklearn.utils.fixes import signature
 from sklearn.metrics import precision_recall_curve
 
 def save_roc_curve(fpr, tpr, roc_auc, smell, config, out_folder, dim):

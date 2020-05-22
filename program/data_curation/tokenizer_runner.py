@@ -2,6 +2,7 @@ import os
 import subprocess
 import shutil
 
+
 # To figure out whether a file contains multiple definitions of a method,
 # we tokenize the file using "method" config and checks whether it contains multiple lines.
 def _is_contain_overloaded_methods(input_file, tokenizer_path, tokenizer_language):
@@ -23,6 +24,7 @@ def _is_contain_overloaded_methods(input_file, tokenizer_path, tokenizer_languag
         return True
     return False
 
+
 def _run_tokenizer(folder_path, out_folder, tokenizer_path, tokenizer_language, tokenizer_level):
     if os.path.exists(out_folder):
         shutil.rmtree(out_folder)
@@ -36,7 +38,7 @@ def _run_tokenizer(folder_path, out_folder, tokenizer_path, tokenizer_language, 
         except:
             pass
         in_file = os.path.abspath(os.path.join(out_folder, "temp.tok"))
-        if(os.path.exists(in_file)):
+        if os.path.exists(in_file):
             os.remove(in_file)
         with open(in_file, "w", errors='ignore') as tok_out_file:
             exe_path = os.path.abspath(tokenizer_path)
@@ -52,23 +54,35 @@ def _run_tokenizer(folder_path, out_folder, tokenizer_path, tokenizer_language, 
                 tok_text = in_f.read()
             f.write(tok_text.lstrip("b'").rstrip("'\\n"))
         os.remove(in_file)
-        if os.path.getsize(out_file)> 52428800: #50 mb
+        if os.path.getsize(out_file) > 52428800: #50 mb
             file_counter += 1
             out_file = os.path.join(out_folder, "tokenized" + str(file_counter) + ".tok")
 
 
+def _get_max_length(tok_text):
+    max_length = 0
+    for line in tok_text.split('\n'):
+        tokens = line.split('\t')
+        if len(tokens) > max_length:
+            max_length = len(tokens)
+    return max_length
+
+
 # tokenizer_language should be either "CSharp" or "Java"
 def tokenize(tokenizer_language, tokenizer_input_base_path, tokenizer_out_base_path, tokenizer_exe_path):
-    list = {"MultifacetedAbstraction"}
-    # list = {"ComplexMethod", "EmptyCatchBlock", "MagicNumber", "MultifacetedAbstraction"}
+    if not os.path.exists(tokenizer_out_base_path):
+        os.makedirs(tokenizer_out_base_path)
+
+    list = ["ComplexConditional"]
+    # list = ["ComplexConditional", "ComplexMethod", "MultifacetedAbstraction", "FeatureEnvy"]
     assert tokenizer_language == "CSharp" or tokenizer_language == "Java"
 
-    for dir in list:
-        for dim in {1, 2}:
+    for dim in {2}:
+        for dir in list:
             # default dimension is 1, so tokenizer level would be method
             tokenizer_level = "method"
             dim_str = "1d"
-            if dir == "MultifacetedAbstraction":
+            if dir in ["MultifacetedAbstraction", "FeatureEnvy"]:
                 tokenizer_level = "file"
             if dim == 2:
                 tokenizer_level = "statement"

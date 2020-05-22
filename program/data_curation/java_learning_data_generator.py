@@ -51,7 +51,10 @@ def _put_files_in_right_bucket(pos_source_file_list, solution, positive_cases_fo
 
                 dest_file_path = os.path.join(positive_cases_folder, namespace + str(pos_counter) + file)
                 if not os.path.exists(dest_file_path):
-                    shutil.copyfile(src_file_path, dest_file_path)
+                    try:
+                        shutil.copyfile(src_file_path, dest_file_path)
+                    except:
+                        pass
                     total_files_copied += 1
                     pos_counter += 1
                 else:
@@ -59,7 +62,10 @@ def _put_files_in_right_bucket(pos_source_file_list, solution, positive_cases_fo
             else:
                 dest_file_path = os.path.join(negative_cases_folder, namespace + str(neg_couter) + file)
                 if not os.path.exists(dest_file_path):
-                    shutil.copyfile(src_file_path, dest_file_path)
+                    try:
+                        shutil.copyfile(src_file_path, dest_file_path)
+                    except:
+                        pass
                     total_files_copied += 1
                     neg_couter += 1
                 else:
@@ -104,10 +110,10 @@ def _scan_solution(solution, positive_cases_folder, negative_cases_folder,
     for root, dirs, files in os.walk(os.path.join(smells_results_folder, solution)):
         for file in files:
             if smell_type == "Design":
-                if not file.endswith("designCodeSmells.csv"):
+                if not file.endswith("DesignSmells.csv"):
                     continue
             else:
-                if not file.endswith("implementationCodeSmells.csv"):
+                if not file.endswith("ImplementationSmells.csv"):
                     continue
             print("Processing file: " + os.path.join(root, file))
             lines = []
@@ -126,10 +132,12 @@ def _scan_solution(solution, positive_cases_folder, negative_cases_folder,
 
 
 def generate_data(smells_results_folder, code_split_out_folder_class, code_split_out_folder_method, learning_data_folder_path):
-    SMELL_NAME_LIST = ["EmptyCatchBlock", "MagicNumber", "ComplexMethod", "MultifacetedAbstraction"]
-    SMELL_NAME_STR_LIST = ["Empty catch clause", "Magic Number", "Complex Method", "Multifaceted Abstraction"]
-    SMELL_TYPE_LIST = ["Impl", "Impl", "Impl", "Design"]
+    SMELL_NAME_LIST = ["ComplexConditional", "ComplexMethod", "MultifacetedAbstraction", "FeatureEnvy"]
+    SMELL_NAME_STR_LIST = ["Complex Conditional", "Complex Method", "Multifaceted Abstraction", "Feature Envy"]
+    SMELL_TYPE_LIST = ["Impl", "Impl", "Design", "Design"]
 
+    if not os.path.exists(learning_data_folder_path):
+        os.makedirs(learning_data_folder_path)
     for smell in range(len(SMELL_NAME_LIST)):
         print("Generating samples for {0} smell...".format(SMELL_NAME_LIST[smell]))
         positive_cases_folder = os.path.join(learning_data_folder_path, SMELL_NAME_LIST[smell], "Positive")

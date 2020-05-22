@@ -96,6 +96,7 @@ def _scan_solution(solution, positive_cases_folder, negative_cases_folder, smell
         if total_file_count == 0:
             return
     else:
+        print("solution folder doesn't exists: " + solution_folder)
         return
 
     pos_source_file_list = list()
@@ -120,11 +121,13 @@ def _scan_solution(solution, positive_cases_folder, negative_cases_folder, smell
                 project = project.replace("_ImpSmells.csv", "")
 
             pos_source_files = _get_positive_src_file_list(lines, solution, project,
-                                                           positive_cases_folder, smell_type)
+                                                           positive_cases_folder, smell_type, code_split_out_folder_class,
+                                                           code_split_out_folder_method)
             pos_source_file_list.extend(pos_source_files)
 
     total_copied_files = _put_files_in_right_bucket(pos_source_file_list, solution,
-                                                    positive_cases_folder, negative_cases_folder, smell_type)
+                                                    positive_cases_folder, negative_cases_folder, smell_type,
+                                                    code_split_out_folder_class, code_split_out_folder_method)
     # Sanity check
     assert (total_file_count == total_copied_files)
 
@@ -137,10 +140,12 @@ def _write_to_file(file_path, list_to_write):
 
 def generate_data(smells_results_folder, code_split_out_folder_class, code_split_out_folder_method,
                   learning_data_folder_base):
-    SMELL_NAME_LIST = ["EmptyCatchBlock", "MagicNumber", "ComplexMethod", "MultifacetedAbstraction"]
-    SMELL_NAME_STR_LIST = ["Empty Catch Block", "Magic Number", "Complex Method", "Multifaceted Abstraction"]
-    SMELL_TYPE_LIST = ["Impl", "Impl", "Impl", "Design"]
+    SMELL_NAME_LIST = ["ComplexConditional", "ComplexMethod", "MultifacetedAbstraction", "FeatureEnvy"]
+    SMELL_NAME_STR_LIST = ["Complex Conditional", "Complex Method", "Multifaceted Abstraction", "Feature Envy"]
+    SMELL_TYPE_LIST = ["Impl", "Impl", "Design", "Design"]
 
+    if not os.path.exists(learning_data_folder_base):
+        os.makedirs(learning_data_folder_base)
     for smell in range(len(SMELL_NAME_LIST)):
         print("Generating samples for {0} smell...".format(SMELL_NAME_LIST[smell]))
         positive_cases_folder = os.path.join(learning_data_folder_base, SMELL_NAME_LIST[smell], "Positive")
